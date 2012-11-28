@@ -83,19 +83,20 @@ This is useful for verifying that each parameter required by a script has been s
 
 ### ScriptRequiredParameterList ( scriptNameToParse )
 
-Parses a script name, returning a return-delimited list of parameters required for that script. This function assumes that the script name conforms to the FileMakerStandards.org [naming convention for scripts][2]. This is useful to generate the argument used by the VariablesNotEmpty function to validate that all required parameters have values. In practice, developers may want to modify this function to always use the current Get ( ScriptName ) and not require the argument.
+Parses a script name, returning a return-delimited list of parameters required for that script. This function assumes that the script name conforms to the FileMakerStandards.org [naming convention for scripts][2]. This is useful to generate the argument used by the VerifyVariablesNotEmpty function to validate that all required parameters have values. When the scriptNameToParse parameter is empty, the function will use the current script name:
+
+	ScriptRequiredParameterList ( "" ) = ScriptRequiredParameterList ( Get ( ScriptName ) )
 
 [2]: http://filemakerstandards.org/display/cs/Script+naming "FileMakerStandards.org: Script naming"
 
 ### ScriptOptionalParameterList ( scriptNameToParse )
 
-Parses a script name, returning a return-delimited list of optional parameters for that script. This function assumes that the script name conforms to the FileMakerStandards.org [naming convention for scripts][2]. This is useful to generate the argument used by the #AssignWhiteList function to restrict variable assignment to parameters actually accepted by a script. In practice, developers may want to modify this function to always use the current Get ( ScriptName ) and not require the argument.
+Parses a script name, returning a return-delimited list of optional parameters for that script. This function assumes that the script name conforms to the FileMakerStandards.org [naming convention for scripts][2]. This is useful to generate the argument used by the #Filter function to restrict variable assignment to parameters actually accepted by a script. As with the ScriptRequiredParameterList function, when the scriptNameToParse parameter is empty, the function will use the current script name.
 
-	#AssignWhiteList (
+	#Assign ( #Filter (
 		Get ( ScriptParameter );
-		ScriptRequiredParameterList ( Get ( ScriptName ) )
-		& ScriptOptionalParameterList ( Get ( ScriptName ) )
-	)
+		ScriptRequiredParameterList ( "" ) & ScriptOptionalParameterList ( "" )
+	) )
 
 ## Deprecated functions
 
@@ -138,7 +139,7 @@ This function is exactly equivalent to this calculation:
 
 Using this calculation instead of this function is preferred.
 
-### #GetScriptResult
+### #GetScriptResult ( name )
 
 This function is exactly equivalent to this calculation:
 
