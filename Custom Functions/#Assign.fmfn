@@ -3,14 +3,14 @@
  * #Assign ( parameters )
  *
  * PURPOSE:
- *		Parses an FSON dictionary of name-value parameters into a series of locally scoped
+ *		Parses a Let dictionary of name-value parameters into a series of locally scoped
  *		$variables.
  *
  * RETURNS:
  *		FileMaker's error code from any errors encountered during evaluation.
  *
  * PARAMETERS:
- *		parameters: An FSON format dictionary, such as produced by the # ( name ; value )
+ *		parameters: A Let format dictionary, such as produced by the # ( name ; value )
  *		function.
  *
  * DEPENDENCIES: none
@@ -19,23 +19,18 @@
  *		Notes go here
  *
  * HISTORY:
+ *		MODIFIED on 2012-11-28 by Jeremy Bante <http://scr.im/jbante> to support "$"
+ *		prefix values as default.
  *		CREATED on 2012-11-11 by Jeremy Bante <http://scr.im/jbante>.
  * =====================================
  */
 
 Let ( [
-	~parameters =	// add leading $ to each parameter
-		Substitute ( ¶ & parameters & "~ = $~";
-			[ "¶$" ; ¶ ];	// strip any existing single $ for backwards compatibility
-			[ ¶ ; "¶$" ];	// add $ so values are assigned to local variables
-			[ "$¶" ; "" ];	// correct for any empty lines in input
-			[ "¶$/" ; "¶/" ]	// don't put $ before comment notation error lines
-		);
 	~error =
 		EvaluationError ( Evaluate (
 			"Let ( [¶"
-			& ~parameters
-			& "¶]; True )"
+			& parameters
+			& "¶~ = \"\" ]; ~ )"
 		) )
 ];
 	~error = 0	// indicate success or failure of Evaluate()

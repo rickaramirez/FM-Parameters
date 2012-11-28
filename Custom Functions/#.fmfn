@@ -18,13 +18,13 @@
  *
  * HISTORY:
  *		MODIFIED on 2012-11-28 by Jeremy Bante <http://scr.im/jbante> to return error
- *		feedback.
+ *		feedback, and to prefix names with "$".
  *		CREATED on 2012-11-10 by Jeremy Bante <http://scr.im/jbante>.
  * =====================================
  */
 
-Let ( [
-	~name =	// strip leading "$$" and "$"
+Let ( [	// strip leading "$$" and "$"
+	~name =
 		Substitute (
 			"/*start*/" & name;
 			[ "/*start*/$$" ; "" ];
@@ -32,12 +32,13 @@ Let ( [
 			[ "/*start*/" ; "" ]
 		);
 	~result =
-		~name
+		"$"
+		& ~name
 		& " = "
 		& Quote ( value )
 		& ";¶";
 	~testExpression =
-		"Let ( [ $"
+		"Let ( [ "
 		& ~result
 		& " ~ = \"\" ]; \"\" )";
 	~error =
