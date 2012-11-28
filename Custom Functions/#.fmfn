@@ -3,7 +3,7 @@
  * # ( name ; value )
  *
  * RETURNS:
- *		An FSON-formatted name-value pair.
+ *		An name-value pair in Let notation.
  *
  * PARAMETERS:
  *		name: The name for the returned name-value pair. name can be any value that would
@@ -16,12 +16,9 @@
  *
  * DEPENDENCIES: none
  *
- * NOTES:
- *		Stating that this function returns "an FSON-formatted name-value pair" is a
- *		circular definition; the behavior of this function should be interpreted as the
- *		definition of what a properly formatted FSON name-value pair is.
- *
  * HISTORY:
+ *		MODIFIED on 2012-11-28 by Jeremy Bante <http://scr.im/jbante> to return error
+ *		feedback.
  *		CREATED on 2012-11-10 by Jeremy Bante <http://scr.im/jbante>.
  * =====================================
  */
@@ -33,12 +30,32 @@ Let ( [
 			[ "/*start*/$$" ; "" ];
 			[ "/*start*/$" ; "" ];
 			[ "/*start*/" ; "" ]
-		)
-];
-	If ( not IsEmpty ( ~name );
+		);
+	~result =
 		~name
 		& " = "
 		& Quote ( value )
-		& ";¶"
+		& ";¶";
+	~testExpression =
+		"Let ( [ $"
+		& ~result
+		& " ~ = \"\" ]; \"\" )";
+	~error =
+		Case (
+			IsEmpty ( ~name );
+				11;	// Name is not valid
+
+			not IsValidExpression ( ~testExpression );
+				1200	// Generic calculation err
+		)
+];
+	If ( ~error;	// prevent bad pairs from affecting evaluation of others by commenting
+		"/* Error "
+		& ~error
+		& " "
+		& ~result
+		& "*/";
+	/* Else */
+		~result
 	)
 )
