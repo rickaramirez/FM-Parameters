@@ -23,8 +23,8 @@
  * =====================================
  */
 
-Let ( [	// strip leading "$$" and "$"
-	~name =
+Let ( [
+	~name =	// strip leading "$$" and "$"
 		Substitute (
 			"/*start*/" & name;
 			[ "/*start*/$$" ; "" ];
