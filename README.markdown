@@ -43,6 +43,16 @@ The #Assign function returns True (1) if there was no error detected while assig
 
 Some legacy versions of the # ( name ; value ) function allow developers to set names intended for global variables. The # ( name ; value ) function defined here will not allow that, but the #Assign function currently will still set legacy global variables in dictionaries for backwards compatibility. This is likely to change in the future.
 
+### #AssignGlobal ( parameters )
+
+The #AssignGlobal function parses a Let format dictionary into global script variables
+
+	#AssignGlobal ( # ( "name" ; "value" ) )	// variable $$name assigned "value"
+
+This approach to setting global variables is preferred over other methods that allow the dictionary itself to define what values should be assigned to globals because it makes more sense that the code that actually assigns the variables should have discretion over what type of variable gets assigned.
+
+The #AssignGlobal function return True (1) if there was no error detected while assigning the values to variables, and returns False (0) otherwise. If there was an error detected, FileMaker's error code is assigned to the $#AssignGlobal.error variable.
+
 ### #Filter ( parameters ; filterParameters )
 
 The #Filter function returns a Let format dictionary containing only those name-value pairs where the name is included in the return-delimited list filterParameters.
@@ -54,16 +64,6 @@ The #Filter function returns a Let format dictionary containing only those name-
 	) )	// variable $name assigned "value"; $foo and $otherName are unaffected
 
 This function can prevent an "injection" of unexpected variables that might cause problems.
-
-### #AssignGlobal ( parameters )
-
-The #AssignGlobal function parses a Let format dictionary into global script variables
-
-	#AssignGlobal ( # ( "name" ; "value" ) )	// variable $$name assigned "value"
-
-This approach to setting global variables is preferred over other methods that allow the dictionary itself to define what values should be assigned to globals because it makes more sense that the code that actually assigns the variables should have discretion over what type of variable gets assigned.
-
-The #AssignGlobal function return True (1) if there was no error detected while assigning the values to variables, and returns False (0) otherwise. If there was an error detected, FileMaker's error code is assigned to the $#AssignGlobal.error variable.
 
 ### #Get ( parameters ; name )
 
