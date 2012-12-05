@@ -29,7 +29,11 @@ Let ( [
 	~error =
 		EvaluationError ( Evaluate (
 			"Let ( [¶"
-			& parameters
+			& Substitute (	// convert global variables to local variables
+				¶ & parameters;
+				"¶$$";
+				"¶$"
+			)
 			& "¶~ = \"\" ]; ~ )"
 		) )
 ];

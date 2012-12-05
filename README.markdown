@@ -33,6 +33,8 @@ This last-value-wins behavior can also be used to set default values for optiona
 
 By placing the defaults before the actual parameters, any values set by the actual script parameter will override the defaults.
 
+Past versions of the # ( name ; value ) function would accept global variable names for the name parameter. This version of the function will convert the global variable to a local variable. It's best that the code assigning data to variables, rather than the code formatting the data, should decide what type of variables to use. Developers interested in setting global variables from serialized data strings should use the #AssignGlobal, #Filter, and #Get functions to achieve similar behaviors.
+
 ### #Assign ( parameters )
 
 The #Assign functions parse a Let format dictionary into local script variables. The name from each name-value pair is used as the variable name, and the value from each pair is set to that variable's value.
@@ -41,7 +43,7 @@ The #Assign functions parse a Let format dictionary into local script variables.
 
 The #Assign function returns True (1) if there was no error detected while assigning the values to variables, and returns False (0) otherwise. If there was an error detected, FileMaker's error code is assigned to the $#Assign.error variable.
 
-Some legacy versions of the # ( name ; value ) function allow developers to set names intended for global variables. The # ( name ; value ) function defined here will not allow that, but the #Assign function currently will still set legacy global variables in dictionaries for backwards compatibility. This is likely to change in the future.
+Some legacy versions of the # ( name ; value ) function allow developers to set names intended for global variables. The # ( name ; value ) function defined here will not allow that, but legacy code may still include name-value pairs targeted at global variables. This version of the #Assign function will assign the values to local variables instead.
 
 ### #AssignGlobal ( parameters )
 
