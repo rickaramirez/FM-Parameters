@@ -4,19 +4,21 @@
  *
  * RETURNS:
  *		A list of Let notation name-value pairs from parameters with names in
- *		filterParameters. Any pairs with names not in filterParameters will not be
- *		included.
+ *		filterParameters. Any pairs with names not in filterParameters will not
+ *		be included.
  *
  * PARAMETERS:
  *		parameters: A string of serialized name-value pair data in Let notation.
- *		filterParameters: A return-delimited list of parameter names to include in the
- *		result.
+ *		filterParameters: A return-delimited list of parameter names to include
+ *		in the result.
+ *
  * EXAMPLE:
  *		#Assign ( #Filter (
  *			# ( "name" ; "value" )
  *			& # ( "foo" ; "bar" );
  *			List ( "name" ; "otherName" )
- *		) )	// variable $name assigned "value"; $foo and $otherName are unaffected
+ *		) )
+ *		// variable $name assigned "value"; $foo and $otherName are unaffected
  *
  * DEPENDENCIES: none
  *
@@ -32,7 +34,7 @@ Case (
 			~empty = IsEmpty ( parameters ) or IsEmpty ( filterParameters );
 			filterParameters =	// add "$" prefix for matching
 				Substitute ( ¶ & filterParameters ; ¶ ; "¶$" );
-			filterParameters =	// add "$$" prefix for backwards-compatible matching
+			filterParameters =	// add "$$" prefix for backwards-compatibility
 				filterParameters
 				& Substitute ( filterParameters ; ¶ ; "¶$" )
 				& ¶;
@@ -57,7 +59,8 @@ Case (
 					)
 				);
 
-			$~step = If ( $~i < $~parameterCount ; $~step ; /* Else */ $~step + 1 )
+			$~step =
+				If ( $~i < $~parameterCount ; $~step ; /* Else */ $~step + 1 )
 		];
 			#Filter ( parameters ; filterParameters )
 		);

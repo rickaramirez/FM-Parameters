@@ -3,15 +3,15 @@
  * #Assign ( parameters )
  *
  * PURPOSE:
- *		Parses a Let dictionary of name-value parameters into a series of locally scoped
- *		$variables.
+ *		Parses a Let dictionary of name-value parameters into a series of
+ *		locally scoped $variables.
  *
  * RETURNS:
  *		FileMaker's error code from any errors encountered during evaluation.
  *
  * PARAMETERS:
- *		parameters: A Let format dictionary, such as produced by the # ( name ; value )
- *		function.
+ *		parameters: A Let format dictionary, such as produced by the
+ *		# ( name ; value ) function.
  *
  * DEPENDENCIES: none
  *
@@ -19,8 +19,8 @@
  *		Notes go here
  *
  * HISTORY:
- *		MODIFIED on 2012-11-28 by Jeremy Bante <http://scr.im/jbante> to support "$"
- *		prefix values as default.
+ *		MODIFIED on 2012-11-28 by Jeremy Bante <http://scr.im/jbante> to support
+ *		"$" prefix values as default.
  *		CREATED on 2012-11-11 by Jeremy Bante <http://scr.im/jbante>.
  * =====================================
  */
@@ -34,5 +34,5 @@ Let ( [
 		) )
 ];
 	~error = 0	// indicate success or failure of Evaluate()
-	or Let ( $#Assign.error = ~error ; False )	// only evaluates on error
+	or Let ( $#Assign.error = ~error ; False )	// only runs on error
 )

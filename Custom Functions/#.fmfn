@@ -6,9 +6,8 @@
  *		An name-value pair in Let notation.
  *
  * PARAMETERS:
- *		name: The name for the returned name-value pair. name can be any value that would
- *		be a valid Let() variable name. Any dollar sign "$" characters will be stripped,
- *		since these are reserved by the FSON format.
+ *		name: The name for the returned name-value pair. name can be any value
+ *		that would be a valid Let() variable name.
  *		value: The value for the returned name-value pair.
  *
  * EXAMPLE:
@@ -17,8 +16,8 @@
  * DEPENDENCIES: none
  *
  * HISTORY:
- *		MODIFIED on 2012-11-28 by Jeremy Bante <http://scr.im/jbante> to return error
- *		feedback, and to prefix names with "$".
+ *		MODIFIED on 2012-11-28 by Jeremy Bante <http://scr.im/jbante> to return
+ *		error feedback, and to prefix names with "$".
  *		CREATED on 2012-11-10 by Jeremy Bante <http://scr.im/jbante>.
  * =====================================
  */
@@ -50,7 +49,7 @@ Let ( [
 				1200	// Generic calculation err
 		)
 ];
-	If ( ~error;	// prevent bad pairs from affecting evaluation of others by commenting
+	If ( ~error;	// prevent bad pairs from affecting evaluation by commenting
 		"/* Error "
 		& ~error
 		& " "
