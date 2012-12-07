@@ -16,6 +16,9 @@
  * DEPENDENCIES: none
  *
  * HISTORY:
+ *		MODIFIED on 2012-12-07 by Jeremy Bante <http://scr.im/jbante> where an
+ *		error result could create invalid sytax for values containing a comment
+ *		close sequence.
  *		MODIFIED on 2012-11-28 by Jeremy Bante <http://scr.im/jbante> to return
  *		error feedback, and to prefix names with "$".
  *		CREATED on 2012-11-10 by Jeremy Bante <http://scr.im/jbante>.
@@ -53,8 +56,12 @@ Let ( [
 		"/* Error "
 		& ~error
 		& " "
-		& ~result
-		& "*/";
+		& Substitute (	// escape comment character sequences
+			~result;
+			[ "*/" ; "\*\/" ];
+			[ "/*" ; "\/\*" ]
+		)
+		& " */";
 	/* Else */
 		~result
 	)
