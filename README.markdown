@@ -75,9 +75,9 @@ The #Get function returns a named value from a dictionary.
 
 Unlike the #Assign functions, #Get will not affect any variables, which can be useful when a named value only needs to be used in one calculation, or to assign a named value to a variable with a different name.
 
-### VerifyVariablesNotEmpty ( parameterNameList )
+### VerifyVariablesNotEmpty ( nameList )
 
-Returns True (1) if each of the parameters in parameterNameList has been assigned to a non-empty local script variable of the same name. Returns False (0) if any variable defined by parameterNameList is empty.
+Returns True (1) if each of the parameters in parameterNameList has been assigned to a non-empty local script variable of the same name. Returns False (0) if any variable defined by nameList is empty.
 
 	VariablesNotEmpty ( List ( "parameter1" ; "parameter2" ) )
 
