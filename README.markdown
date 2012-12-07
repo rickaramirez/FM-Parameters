@@ -85,7 +85,7 @@ This is useful for verifying that each parameter required by a script has been s
 
 ### ScriptRequiredParameterList ( scriptNameToParse )
 
-Parses a script name, returning a return-delimited list of parameters required for that script. This function assumes that the script name conforms to the FileMakerStandards.org [naming convention for scripts][2]. This is useful to generate the argument used by the VerifyVariablesNotEmpty function to validate that all required parameters have values. When the scriptNameToParse parameter is empty, the function will use the current script name:
+Parses a script name, returning a return-delimited list of parameters required for that script, in the order they appear in the script name. This function assumes that the script name conforms to the FileMakerStandards.org [naming convention for scripts][2]. This is useful to generate the argument used by the VerifyVariablesNotEmpty function to validate that all required parameters have values. When the scriptNameToParse parameter is empty, the function will use the current script name:
 
 	ScriptRequiredParameterList ( "" ) = ScriptRequiredParameterList ( Get ( ScriptName ) )
 
