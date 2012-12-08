@@ -1,12 +1,12 @@
 # FM-Parameters
 
-FM-Parameters is a series of tools, mostly custom functions, for creating and parsing serialized data objects in FileMaker. These are most frequently used for passing multiple pieces of data in script parameters and results. This repository is an incomplete work in progress, based on the recommended script parameter interface of [FileMakerStandards.org][1].
+FM-Parameters is a series of custom functions for creating and parsing serialized data in FileMaker. These are most frequently used for passing multiple pieces of data in script parameters and results. This repository is an incomplete work in progress based on the recommended script parameter interface of [FileMakerStandards.org][1].
 
 [1]: http://filemakerstandards.org/pages/viewpage.action?pageId=557462 "FileMakerStandards.org: Script Parameter Interface"
 
 ## The format
 
-These functions manipulate data stored in a format that matches the variable-declaration format of FileMaker's Let () function. This is so that the format will appear familiar to FileMaker developers without additional background knowledge. This mirrors the relationship between JavaScript and JSON.
+In theory, the data serialization format is irrelevant to how these functions should behave relative to each other. Changing the data format used by the functions should not require any changes to their use. In this version, the functions manipulate data stored in a format that matches the variable-declaration format of FileMaker's Let () function. This is so that the format will appear familiar to FileMaker developers without additional background knowledge. This mirrors the relationship between JavaScript and JSON.
 
 ## The functions
 
@@ -24,7 +24,7 @@ Named values can be over-written or effectively erased by concatenating a call t
 	# ( "name" ; "value" )
 	& # ( "foo" ; "bar" )
 	& # ( "name" ; "new value" )
-	& # ( "foo" ; "" )	// Assigning null value effectively deletes "foo"
+	& # ( "foo" ; "" )	// Assigning empty value effectively deletes "foo"
 
 This last-value-wins behavior can also be used to set default values for optional parameters.
 
@@ -33,11 +33,11 @@ This last-value-wins behavior can also be used to set default values for optiona
 
 By placing the defaults before the actual parameters, any values set by the actual script parameter will override the defaults.
 
-Past versions of the # ( name ; value ) function would accept global variable names for the name parameter. This version of the function will convert the global variable to a local variable. It's best that the code assigning data to variables, rather than the code formatting the data, should decide what type of variables to use. Developers interested in setting global variables from serialized data strings should use the #AssignGlobal, #Filter, and #Get functions to achieve similar behaviors.
+Past versions of the # ( name ; value ) function would accept global variable names for the name parameter. This version of the function will convert the global variable to a local variable. I believe it's better that the code assigning data to variables, rather than the code serializing the data, should decide what scope of variables to use. Developers interested in setting global variables from serialized data should use the #AssignGlobal, #Filter, and #Get functions to achieve similar behaviors.
 
 ### #Assign ( parameters )
 
-The #Assign functions parse a Let format dictionary into local script variables. The name from each name-value pair is used as the variable name, and the value from each pair is set to that variable's value.
+The #Assign functions parse a dictionary into local script variables. The name from each name-value pair is used as the variable name, and the value from each pair is set to that variable's value.
 
 	#Assign ( # ( "name" ; "value" ) )	// variable $name assigned "value"
 
@@ -47,11 +47,11 @@ Some legacy versions of the # ( name ; value ) function allow developers to set 
 
 ### #AssignGlobal ( parameters )
 
-The #AssignGlobal function parses a Let format dictionary into global script variables
+The #AssignGlobal function parses a dictionary into global variables.
 
 	#AssignGlobal ( # ( "name" ; "value" ) )	// variable $$name assigned "value"
 
-This approach to setting global variables is preferred over other methods that allow the dictionary itself to define what values should be assigned to globals because it makes more sense that the code that actually assigns the variables should have discretion over what type of variable gets assigned.
+This approach to setting global variables is preferred over other methods that allow the dictionary itself to define what values should be assigned to globals. It makes more sense that the code that assigns the variables should have discretion over what scope of variable gets assigned.
 
 The #AssignGlobal function return True (1) if there was no error detected while assigning the values to variables, and returns False (0) otherwise. If there was an error detected, FileMaker's error code is assigned to the $#AssignGlobal.error variable.
 
@@ -102,7 +102,7 @@ Parses a script name, returning a return-delimited list of optional parameters f
 
 ## Deprecated functions
 
-These functions are implemented for the sake of backwards compatibility in those solutions using the current FileMakerStandards.org functions, but their use is discouraged. These functions are all equivalent to simple combinations of other functions. These functions may be easier to type than the equivalent combinations of other functions, but tools like [TextExpander][], [Breevy][], and [Clip Manager][] make this a moot point. This approach also makes the resulting code more explicit about what logic is being applied to what data inputs, making the code more readable, especially to developers unfamiliar with the functions.
+These functions are implemented for the sake of backwards compatibility in those solutions using the current FileMakerStandards.org functions, but their use is discouraged. These functions are all equivalent to simple combinations of other functions. These functions may be easier to type than the equivalent combinations of other functions, but tools like [TextExpander][], [Breevy][], and [Clip Manager][] make this a moot point. This approach also makes the resulting code more transparent about what logic is being applied to what data inputs, making the code more readable, especially to developers unfamiliar with the functions.
 
 [TextExpander]: http://smilesoftware.com/TextExpander/index.html
 [Breevy]: http://www.16software.com/breevy/
@@ -160,7 +160,7 @@ The dictionary functions by Six Fried Rice (mentioned in [introductory][4] and [
 [4]: http://sixfriedrice.com/wp/passing-multiple-parameters-to-scripts-advanced/ "Six Fried Rice: Passing Multiple Parameters to Scripts - Advanced"
 [5]: http://sixfriedrice.com/wp/filemaker-dictionary-functions/ "Six Fried Rice: FileMaker Dictionary Functions"
 
-Dan Smith started the correspondence that inspired me to reform the existing FileMakerStandards.org solution for object serialization.
+Dan Smith started the correspondence that inspired me to reform the existing FileMakerStandards.org solution for data serialization.
 
 ## License
 
