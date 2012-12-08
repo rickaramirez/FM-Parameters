@@ -93,7 +93,7 @@ Parses a script name, returning a return-delimited list of parameters required f
 
 ### ScriptOptionalParameterList ( scriptNameToParse )
 
-Parses a script name, returning a return-delimited list of optional parameters for that script. This function assumes that the script name conforms to the FileMakerStandards.org [naming convention for scripts][2]. This is useful to generate the argument used by the #Filter function to restrict variable assignment to parameters actually accepted by a script. As with the ScriptRequiredParameterList function, when the scriptNameToParse parameter is empty, the function will use the current script name.
+Parses a script name, returning a return-delimited list of optional parameters for that script, in the order they appear in the script name. This function assumes that the script name conforms to the FileMakerStandards.org [naming convention for scripts][2]. This is useful to generate the argument used by the #Filter function to restrict variable assignment to parameters actually accepted by a script. As with the ScriptRequiredParameterList function, when the scriptNameToParse parameter is empty, the function will use the current script name.
 
 	#Assign ( #Filter (
 		Get ( ScriptParameter );

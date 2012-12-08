@@ -1,9 +1,9 @@
 /**
  * =====================================
- * ScriptRequiredParameterList ( scriptNameToParse )
+ * ScriptOptionalParameterList ( scriptNameToParse )
  *
  * RETURNS:
- *		A return-delimited list of required script parameters according to the
+ *		A return-delimited list of optional script parameters according to the
  *		script name and the FileMakerStandards.org convention for listing
  *		parameters in script names.
  *
@@ -31,8 +31,8 @@ Case (
 					/* Else */ scriptNameToParse
 				);
 			~length = Length ( scriptNameToParse );
-			~start = Position ( scriptNameToParse ; "(" ; ~length ; -1 ) + 1;
-			~endOptional = Position ( scriptNameToParse ; "{" ; ~start ; 1 );
+			~start = Position ( scriptNameToParse ; "{" ; ~length ; -1 ) + 1;
+			~endOptional = Position ( scriptNameToParse ; "}" ; ~start ; 1 );
 			~endOptional =
 				If ( ~endOptional = 0 ; ~length ; /* Else */ ~endOptional );
 			~endRequired = Position ( scriptNameToParse ; ")" ; ~start ; 1 );
@@ -40,7 +40,7 @@ Case (
 				If ( ~endRequired = 0 ; ~length ; /* Else */ ~endRequired );
 			~end = Min ( ~endOptional ; ~endRequired );
 			parameters =
-				If ( ~start = 1;	// opening "(" not found
+				If ( ~start = 1;	// opening "{" not found
 					"";
 				/* Else */
 					Middle ( scriptNameToParse ; ~start ; ~end - ~start )
