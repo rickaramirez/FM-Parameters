@@ -23,7 +23,7 @@
 
 Case (
 	/* Step 0, set-up */
-	not $~step;
+	not $~parse.step;
 		Let ( [
 			scriptNameToParse =
 				If ( IsEmpty ( scriptNameToParse );
@@ -46,35 +46,38 @@ Case (
 					Middle ( scriptNameToParse ; ~start ; ~end - ~start )
 				);
 			parameters = Substitute ( parameters ; ";" ; ¶ );
-			$~parameterCount = ValueCount ( parameters );
+			$~parse.parameterCount = ValueCount ( parameters );
 
-			$~step = If ( IsEmpty ( parameters ) ; 2 ; /* Else */ 1 )
+			$~parse.step = If ( IsEmpty ( parameters ) ; 2 ; /* Else */ 1 )
 		];
 			ScriptRequiredParameterList ( parameters )
 		);
 
 	/* Step 1, trim whitespace */
-	$~step = 1;
+	$~parse.step = 1;
 		Let ( [
-			$~i = $~i + 1;
-			parameter = Trim ( GetValue ( scriptNameToParse ; $~i ) );
-			$~result = List ( $~result ; parameter );
-			$~step =
-				If ( $~i < $~parameterCount ; $~step ; /* Else */ $~step + 1 )
+			$~parse.i = $~parse.i + 1;
+			parameter = Trim ( GetValue ( scriptNameToParse ; $~parse.i ) );
+			$~parse.result = List ( $~parse.result ; parameter );
+			$~parse.step =
+				If ( $~parse.i < $~parse.parameterCount;
+					$~parse.step;
+					/* Else */ $~parse.step + 1
+				)
 		];
 			ScriptRequiredParameterList ( scriptNameToParse )
 		);
 
 	/* Step 2, clean-up and return result */
-	$~step = 2;
+	$~parse.step = 2;
 		Let ( [
-			~result = $~result;
+			~result = $~parse.result;
 
 			// purge variables
-			$~i = "";
-			$~parameterCount = "";
-			$~result = "";
-			$~step = ""
+			$~parse.i = "";
+			$~parse.parameterCount = "";
+			$~parse.result = "";
+			$~parse.step = ""
 		];
 			~result
 		)
