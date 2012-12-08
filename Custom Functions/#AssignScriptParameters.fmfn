@@ -24,6 +24,8 @@
  *
  * DEPENDENCIES:
  *		#Assign ( parameters )
+ *		VerifyVariablesNotEmpty ( nameList )
+ *		ScriptRequiredParameterList ( scriptNameToParse )
  *
  * NOTES:
  *		To be accessible outside this function, variable declarations in the
