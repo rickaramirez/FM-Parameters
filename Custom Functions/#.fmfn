@@ -16,6 +16,8 @@
  * DEPENDENCIES: none
  *
  * HISTORY:
+ *		MODIFIED on 2012-12-12 by Daniel Smith dansmith65@gmail.com to preserve
+ *		data type of value
  *		MODIFIED on 2012-12-07 by Jeremy Bante <http://scr.im/jbante> where an
  *		error result could create invalid sytax for values containing a comment
  *		close sequence.
@@ -26,6 +28,11 @@
  */
 
 Let ( [
+	// characters used as separators in a date field
+	~DATECHARS = "\/-" ;
+	// characters used as separators in a time field
+	~TIMECHARS = ":" ;
+	
 	~name =	// strip leading "$$" and "$"
 		Substitute (
 			"/*start*/" & name;
@@ -33,11 +40,56 @@ Let ( [
 			[ "/*start*/$" ; "" ];
 			[ "/*start*/" ; "" ]
 		);
+	~value =
+		Case (
+			value = "" ;
+			Quote ( value ) ;  // need to test for empty value otherwise it will be treated as a number by the next section
+			
+			value ≠ GetAsNumber ( value ) ;
+			Quote ( value ) ;
+			
+			// value is a number, timestamp, date, or time
+			Case (
+				// negative time value
+				value < 0 and not IsEmpty ( Filter ( value ; ~TIMECHARS ) ) ;
+				"GetAsTime ( " & Quote( value ) & " )" ;
+				
+				not IsEmpty ( Filter ( value ; ~DATECHARS ) )
+					and not IsEmpty ( Filter ( value ; ~TIMECHARS ) )
+				;
+				"GetAsTimestamp ( " & Quote( value ) & " )" ;
+				
+				not IsEmpty ( Filter ( value ; ~TIMECHARS ) ) ;
+				"GetAsTime ( " & Quote( value ) & " )" ;
+				
+				/**
+				 * At this point, if value is less than 1, it must be either
+				 * a negative number or a decimal exponent.
+				 * This section must be after test for time because time can
+				 * contain a negative number.
+				 * This section should be before test for date, because a date
+				 *   can contain a -, which is also used for a negative number.
+				 */
+				value < 1 ;
+				"GetAsNumber ( " & GetAsNumber( value ) & " )" ;
+				
+				not IsEmpty ( Filter ( value ; ~DATECHARS ) ) ;
+				"GetAsDate ( " & Quote( value ) & " )" ;
+
+				/**
+				 * either a number, or:
+				 * if the ~DATECHARS and ~TIMECHARS variables do not contain the
+				 * separator chars in use on the current computer, store the
+				 * date/time/timestamp as a number
+				 */
+				"GetAsNumber ( " & GetAsNumber( value ) & " )"
+			)
+		) ;
 	~result =
 		"$"
 		& ~name
 		& " = "
-		& Quote ( value )
+		& ~value
 		& ";¶";
 	~testExpression =
 		"Let ( [ "
@@ -55,11 +107,21 @@ Let ( [
 	If ( ~error;	// prevent bad pairs from affecting evaluation by commenting
 		"/* Error "
 		& ~error
-		& " "
-		& Substitute (	// escape comment character sequences
-			~result;
-			[ "*/" ; "\*\/" ];
-			[ "/*" ; "\/\*" ]
+		& " name: "
+		& Quote (
+			Substitute (	// escape comment character sequences
+				name ;
+				[ "*/" ; "\*\/" ];
+				[ "/*" ; "\/\*" ]
+			)
+		)
+		& " value: "
+		& Quote (
+			Substitute (	// escape comment character sequences
+				value ;
+				[ "*/" ; "\*\/" ];
+				[ "/*" ; "\/\*" ]
+			)
 		)
 		& " */";
 	/* Else */
