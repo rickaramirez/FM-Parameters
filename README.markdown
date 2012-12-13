@@ -8,7 +8,9 @@ FM-Parameters is a series of custom functions for creating and parsing serialize
 
 In theory, the data serialization format is irrelevant to how these functions should behave relative to each other. Changing the data format used by the functions should not require any changes to their use. In this version, the functions manipulate data stored in a format that matches the variable-declaration format of FileMaker's Let () function. This is so that the format will appear familiar to FileMaker developers without additional background knowledge. This mirrors the relationship between JavaScript and JSON.
 
-## The functions
+## Core Functions
+
+These functions implement the basics of adding data to and retrieving data from dictionary data structures.
 
 ### # ( name ; value )
 
@@ -45,6 +47,18 @@ The #Assign function returns True (1) if there was no error detected while assig
 
 Some legacy versions of the # ( name ; value ) function allow developers to set names intended for global variables. The # ( name ; value ) function defined here will not allow that, but legacy code may still include name-value pairs targeted at global variables. This version of the #Assign function will assign the values to local variables instead.
 
+### #Get ( parameters ; name )
+
+The #Get function returns a named value from a dictionary.
+
+	#Get ( # ( "name" ; "value" ) ; "name" )	// = "value"
+
+Unlike the #Assign functions, #Get will not affect any variables, which can be useful when a named value only needs to be used in one calculation, or to assign a named value to a variable with a different name.
+
+## Utility Functions
+
+These functions are less fundamental to working with dictionary data structures than the core functions, but experience has demonstrated that this functionality is indispensable in practical applications.
+
 ### #AssignGlobal ( parameters )
 
 The #AssignGlobal function parses a dictionary into global variables.
@@ -67,30 +81,6 @@ The #Filter function returns a Let format dictionary containing only those name-
 
 This function can prevent an "injection" of unexpected variables that might cause problems.
 
-### #Get ( parameters ; name )
-
-The #Get function returns a named value from a dictionary.
-
-	#Get ( # ( "name" ; "value" ) ; "name" )	// = "value"
-
-Unlike the #Assign functions, #Get will not affect any variables, which can be useful when a named value only needs to be used in one calculation, or to assign a named value to a variable with a different name.
-
-### VerifyVariablesNotEmpty ( nameList )
-
-Returns True (1) if each of the parameters in parameterNameList has been assigned to a non-empty local script variable of the same name. Returns False (0) if any variable defined by nameList is empty.
-
-	VariablesNotEmpty ( List ( "parameter1" ; "parameter2" ) )
-
-This is useful for verifying that each parameter required by a script has been successfully assigned before proceeding.
-
-### ScriptRequiredParameterList ( scriptNameToParse )
-
-Parses a script name, returning a return-delimited list of parameters required for that script, in the order they appear in the script name. This function assumes that the script name conforms to the FileMakerStandards.org [naming convention for scripts][2]. This is useful to generate the argument used by the VerifyVariablesNotEmpty function to validate that all required parameters have values. When the scriptNameToParse parameter is empty, the function will use the current script name:
-
-	ScriptRequiredParameterList ( "" ) = ScriptRequiredParameterList ( Get ( ScriptName ) )
-
-[2]: http://filemakerstandards.org/display/cs/Script+naming "FileMakerStandards.org: Script naming"
-
 ### ScriptOptionalParameterList ( scriptNameToParse )
 
 Parses a script name, returning a return-delimited list of optional parameters for that script, in the order they appear in the script name. This function assumes that the script name conforms to the FileMakerStandards.org [naming convention for scripts][2]. This is useful to generate the argument used by the #Filter function to restrict variable assignment to parameters actually accepted by a script. As with the ScriptRequiredParameterList function, when the scriptNameToParse parameter is empty, the function will use the current script name.
@@ -100,9 +90,25 @@ Parses a script name, returning a return-delimited list of optional parameters f
 		ScriptRequiredParameterList ( "" ) & ScriptOptionalParameterList ( "" )
 	) )
 
-## Deprecated functions
+### ScriptRequiredParameterList ( scriptNameToParse )
 
-These functions are implemented for the sake of backwards compatibility in those solutions using the current FileMakerStandards.org functions, but their use is discouraged. These functions are all equivalent to simple combinations of other functions. These functions may be easier to type than the equivalent combinations of other functions, but tools like [TextExpander][], [Breevy][], and [Clip Manager][] make this a moot point. This approach also makes the resulting code more transparent about what logic is being applied to what data inputs, making the code more readable, especially to developers unfamiliar with the functions.
+Parses a script name, returning a return-delimited list of parameters required for that script, in the order they appear in the script name. This function assumes that the script name conforms to the FileMakerStandards.org [naming convention for scripts][2]. This is useful to generate the argument used by the VerifyVariablesNotEmpty function to validate that all required parameters have values. When the scriptNameToParse parameter is empty, the function will use the current script name:
+
+	ScriptRequiredParameterList ( "" ) = ScriptRequiredParameterList ( Get ( ScriptName ) )
+
+[2]: http://filemakerstandards.org/display/cs/Script+naming "FileMakerStandards.org: Script naming"
+
+### VerifyVariablesNotEmpty ( nameList )
+
+Returns True (1) if each of the parameters in parameterNameList has been assigned to a non-empty local script variable of the same name. Returns False (0) if any variable defined by nameList is empty.
+
+	VariablesNotEmpty ( List ( "parameter1" ; "parameter2" ) )
+
+This is useful for verifying that each parameter required by a script has been successfully assigned before proceeding.
+
+## Legacy functions
+
+These functions are implemented for the sake of backwards compatibility in those solutions using the current FileMakerStandards.org functions. These functions are all equivalent to simple combinations of other functions. These functions may be easier to type than the equivalent combinations of other functions, but tools like [TextExpander][], [Breevy][], and [Clip Manager][] make this a moot point. This approach also makes the resulting code more transparent about what logic is being applied to what data inputs, making the code more readable, especially to developers unfamiliar with the functions.
 
 [TextExpander]: http://smilesoftware.com/TextExpander/index.html
 [Breevy]: http://www.16software.com/breevy/
@@ -149,6 +155,21 @@ This function is exactly equivalent to this calculation:
 
 Using this calculation instead of this function is preferred.
 
+## Roadmap
+
+The core and utility functions accomplish what most of us need most of the time, but this is some nice-to-have functionality we're considering implementing in the future.
+
+### #GetNameList ( parameters )
+
+The #GetNameList function returns a return-delimited list of (distinct) names from name-value pairs in the parameters.
+
+	#GetNameList (
+		# ( "name" ; "value" )
+		& # ( "foo" ; Random )
+		& # ( "bar" ; Random )
+		& # ( "name" ; "another value" )
+	)	// = "name¶foo¶bar"
+
 ## Acknowledgements
 
 The Let format was inspired by an example in FileMaker's [documentation for the Let() function][3].
@@ -160,7 +181,7 @@ The dictionary functions by Six Fried Rice (mentioned in [introductory][4] and [
 [4]: http://sixfriedrice.com/wp/passing-multiple-parameters-to-scripts-advanced/ "Six Fried Rice: Passing Multiple Parameters to Scripts - Advanced"
 [5]: http://sixfriedrice.com/wp/filemaker-dictionary-functions/ "Six Fried Rice: FileMaker Dictionary Functions"
 
-Dan Smith started the correspondence that inspired me to reform the existing FileMakerStandards.org solution for data serialization.
+The commenters at [FileMakerStandards.org][1] were instrumental in refining the function interfaces.
 
 ## License
 
