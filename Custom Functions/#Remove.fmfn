@@ -1,0 +1,91 @@
+/**
+ * =====================================
+ * #Remove ( parameters ; name )
+ *
+ * RETURNS:
+ *		Parameters with all occurences of name removed.
+ *
+ * PARAMETERS:
+ *		parameters: A string of name-value pairs
+ *		name: The name to remove
+ *
+ * DEPENDENCIES: none
+ *
+ * NOTES:
+ *		This is a recursive function.
+ *
+ * HISTORY:
+ *		CREATED on 2012-12-20 by Daniel Smith dansmith65@gmail.com
+ * =====================================
+ */
+
+Let ( [
+	~nameCount =
+		PatternCount (
+			¶ & parameters ;
+			"¶$" & name & " ="
+		) ;
+	~nameCount =  // check for $$global name for backwards compatibility
+		If (
+			~nameCount = 0 ;
+			PatternCount (
+				¶ & parameters ;
+				"¶$$" & name & " ="
+			) ;
+		// else
+			~nameCount
+		) ;
+	~namePosition =
+		If (
+			~nameCount ;
+			Position (
+				¶ & parameters ;
+				"¶$" & name & " =" ;
+				1 ;
+				1
+			)
+		) ;
+	~namePosition =  // check for $$global name for backwards compatibility
+		If (
+			~nameCount and ~namePosition = 0 ;
+			Position (
+				¶ & parameters ;
+				"¶$$" & name & " =" ;
+				1 ;
+				1
+			) ;
+		// else
+			~namePosition
+		) ;
+	~endPosition =
+		If (
+			~nameCount ;
+			Position (
+				¶ & parameters ;
+				";¶" ;
+				~namePosition ;
+				1
+			)
+		) ;
+	~parametersNew =
+		If (
+			~nameCount = 0 ;
+			parameters ;
+		// else
+			If (
+				~namePosition > 1 ;
+				Left ( parameters ; ~namePosition - 1 )
+			)
+			& If (
+				~endPosition < Length ( parameters ) ;
+				Right ( parameters ; Length ( parameters ) - ~endPosition )
+			)
+		)
+] ;
+	If (
+		~nameCount > 1 ;
+		#Remove ( ~parametersNew ; name ) ;
+	// else
+		~parametersNew
+	)
+)
