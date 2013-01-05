@@ -81,6 +81,18 @@ The #Filter function returns a Let format dictionary containing only those name-
 
 This function can prevent an "injection" of unexpected variables that might cause problems.
 
+### #Remove ( parameters ; removeParameters )
+
+The #Remove function returns a Let format dictionary containing only those name-value pairs where the name is not included in the return-delimited list removeParameters. This is complementary to the #Filter function. As illustrated in the documentation for the # ( name ; value ) function, a similar effect can be achieved by concatenating an empty value for a name to a dictionary, but there is an important difference when using the resulting dictionary with the #Assign function.
+
+	Set Variable [$name; Value:"value"]
+	Set Variable [$~; Value:#Assign ( #Remove ( $dictionary ; "name" ) )]
+	# $name = "value"
+	Set Variable [$~; Value:#Assign ( $dictionary & # ( "name" ; "" ) )]
+	# $name = ""
+
+The #Remove function is also useful for "compacting" a dictionary after some values are no longer needed.
+
 ### ScriptOptionalParameterList ( scriptNameToParse )
 
 Parses a script name, returning a return-delimited list of optional parameters for that script, in the order they appear in the script name. This function assumes that the script name conforms to the FileMakerStandards.org [naming convention for scripts][2]. This is useful to generate the argument used by the #Filter function to restrict variable assignment to parameters actually accepted by a script. As with the ScriptRequiredParameterList function, when the scriptNameToParse parameter is empty, the function will use the current script name.
