@@ -45,7 +45,7 @@ Case (
 			#Filter ( parameters ; filterParameters )
 		);
 
-	/* Step 1, do stuff */
+	/* Step 1, check each parameter */
 	$#Filter.step = 1 ;
 		Let ( [
 			$#Filter.i = $#Filter.i + 1 ;
