@@ -69,6 +69,17 @@ This approach to setting global variables is preferred over other methods that a
 
 The #AssignGlobal function return True (1) if there was no error detected while assigning the values to variables, and returns False (0) otherwise. If there was an error detected, FileMaker's error code is assigned to the $#AssignGlobal.error variable.
 
+### #GetNameList ( parameters )
+
+The #GetNameList function returns a return-delimited list of (distinct) names from name-value pairs in the parameters.
+
+	#GetNameList (
+		# ( "name" ; "value" )
+		& # ( "foo" ; Random )
+		& # ( "bar" ; Random )
+		& # ( "name" ; "another value" )
+	)	// = "name¶foo¶bar"
+
 ### #Filter ( parameters ; filterParameters )
 
 The #Filter function returns a Let format dictionary containing only those name-value pairs where the name is included in the return-delimited list filterParameters.
@@ -171,16 +182,13 @@ Using this calculation instead of this function is preferred.
 
 The core and utility functions accomplish what most of us need most of the time, but this is some nice-to-have functionality we're considering implementing in the future.
 
-### #GetNameList ( parameters )
+### #List ( value )
 
-The #GetNameList function returns a return-delimited list of (distinct) names from name-value pairs in the parameters.
+Encode a value so it can be stored as a single value in a FileMaker List.
 
-	#GetNameList (
-		# ( "name" ; "value" )
-		& # ( "foo" ; Random )
-		& # ( "bar" ; Random )
-		& # ( "name" ; "another value" )
-	)	// = "name¶foo¶bar"
+### #ListGet ( listOfValues ; valueNumber )
+
+Retrieve a value from a list created with the #List custom function.
 
 ## Acknowledgements
 
